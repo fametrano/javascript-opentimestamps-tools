@@ -23,7 +23,9 @@ const blockexplorers = {
         'https://testnet.blockexplorer.com/api'
         //'https://blockstream.info/api',
         //'https://blockexplorer.com/api'
-    ]
+    ],
+    chain: 'bitcoinTestnet'
+    //chain: 'bitcoin' //redundant, as this would be the default
 }
 
 
