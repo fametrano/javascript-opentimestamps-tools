@@ -1,26 +1,4 @@
 const OpenTimestamps = window.OpenTimestamps
-const calendarsList = [
-    'http://calendar.irsa.it:80'
-    //'https://alice.btc.calendar.opentimestamps.org', 
-    //'https://bob.btc.calendar.opentimestamps.org',
-    //'https://finney.calendar.eternitywall.com'
-    ]
-const wcalendars = [
-    'http://calendar.irsa.it:80'
-    //'https://alice.btc.calendar.opentimestamps.org', 
-    //'https://bob.btc.calendar.opentimestamps.org',
-    //'https://finney.calendar.eternitywall.com'
-]
-const whitelistedCalendars = new OpenTimestamps.Calendar.UrlWhitelist(wcalendars)
-const blockexplorers = {
-    urls: [
-        'https://blockstream.info/testnet/api',
-        'https://testnet.blockexplorer.com/api'
-        //'https://blockstream.info/api',
-        //'https://blockexplorer.com/api'
-    ]
-}
-
 
 $("#btn-hash").click(function(event) {
     event.preventDefault()
@@ -89,8 +67,7 @@ $("#btn-stamp").click(function(event) {
 
     const filename = $("#stamp-filename").val()
 
-    const options = { calendars: calendarsList }
-    OpenTimestamps.stamp(detachedOriginal, options).then( () => {
+    OpenTimestamps.stamp(detachedOriginal).then( () => {
         const byteots = detachedOriginal.serializeToBytes()
         const hexots = bytesToHex(byteots)
         $("#stamp-output").val(hexots)
@@ -188,8 +165,7 @@ $("#btn-upgrade").click(function(event) {
     const filename = $("#upgrade-filename").val()
     $("#verify-filename").val(filename)
 
-    const upgradeOptions = { whitelist: whitelistedCalendars }
-    OpenTimestamps.upgrade(detachedStamped, upgradeOptions).then( (changed)=>{
+    OpenTimestamps.upgrade(detachedStamped).then( (changed)=>{
         const timestampBytes = detachedStamped.serializeToBytes()
         const hexots = bytesToHex(timestampBytes)
         if (changed === true) {
@@ -229,8 +205,7 @@ $("#btn-verify").click(function(event) {
     const filename = $("#verify-filename").val()
     var outputText = ""
 
-    const upgradeOptions = { whitelist: whitelistedCalendars }
-    OpenTimestamps.upgrade(detachedStamped, upgradeOptions).then( (changed)=>{
+    OpenTimestamps.upgrade(detachedStamped).then( (changed)=>{
         const timestampBytes = detachedStamped.serializeToBytes()
         hexots = bytesToHex(timestampBytes)
         if (changed === true) {
@@ -250,8 +225,7 @@ $("#btn-verify").click(function(event) {
             outputText += "No proof upgrade available"
         }
         $("#verify-output").val(outputText + "\nWaiting for verification results...")
-        const verifyOptions = { insight: blockexplorers }
-        return OpenTimestamps.verifyTimestamp(detachedStamped.timestamp, verifyOptions)
+        return OpenTimestamps.verifyTimestamp(detachedStamped.timestamp)
     }).then( (results)=>{
         if (Object.keys(results).length === 0) {
             if (!detachedStamped.timestamp.isTimestampComplete())
